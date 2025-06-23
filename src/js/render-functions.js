@@ -3,15 +3,9 @@ import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-import { getImagesByQuery } from './pixabay-api';
-
-const gallery = document.querySelector('.gallery');
+export const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
-const btnLoadMore = document.querySelector('.btn-load-more');
-
-let page = 1;
-let queryCard = '';
-const perPage = 15;
+export const btnLoadMore = document.querySelector('.btn-load-more');
 
 export const simpleLightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
@@ -81,55 +75,4 @@ export function showLoadMoreButton() {
 
 export function hideLoadMoreButton() {
   btnLoadMore.classList.add('hidden-btn');
-}
-
-btnLoadMore.addEventListener('click', handleClick);
-
-export function setQueryCard(query) {
-  queryCard = query;
-}
-
-export async function handleClick(event) {
-  page += 1;
-  btnLoadMore.disabled = true;
-  showLoader();
-
-  try {
-    const data = await getImagesByQuery(queryCard, page);
-    createGallery(data.hits);
-
-    const galleryChild = gallery.firstElementChild;
-    const cardHeight = galleryChild.getBoundingClientRect().height;
-    window.scrollBy({
-      top: cardHeight * 2,
-      left: 100,
-      behavior: 'smooth',
-    });
-
-    btnLoadMore.disabled = false;
-
-    const totalPages = Math.ceil(data.totalHits / perPage);
-    console.log(totalPages);
-
-    if (page < totalPages) {
-      showLoadMoreButton();
-    } else {
-      hideLoadMoreButton();
-      iziToast.info({
-        message: "We're sorry, but you've reached the end of search results.",
-        position: 'topRight',
-      });
-    }
-    console.log(data);
-  } catch (error) {
-    iziToast.error({
-      message:
-        'Sorry, there are no images matching your search query. Please try again!',
-      backgroundColor: 'pink',
-      position: 'topRight',
-    });
-    return;
-  } finally {
-    hideLoader();
-  }
 }
