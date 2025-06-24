@@ -74,8 +74,6 @@ export async function changeSubmit(event) {
       });
     }
     createGallery(res.hits);
-
-    showLoadMoreButton();
   } catch (error) {
     iziToast.error({
       message:
@@ -109,7 +107,7 @@ async function handleClick(event) {
     const cardHeight = galleryChild.getBoundingClientRect().height;
     window.scrollBy({
       top: cardHeight * 2,
-      left: 100,
+      left: 0,
       behavior: 'smooth',
     });
 
